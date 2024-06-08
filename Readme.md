@@ -1,0 +1,1 @@
+A Simple C# producer consumer demo with RabbitMQ message broker
