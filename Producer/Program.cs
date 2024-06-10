@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System;
+﻿using System;
 using System.Text;
 using System.Collections;
 using RabbitMQ.Client;
@@ -10,8 +9,8 @@ var factory = new ConnectionFactory{
     ClientProvidedName= "Producer App" 
 };
 
-using var connection = factory.CreateConnection();
-using var channel = connection.CreateModel();
+using var connectionFactory = factory.CreateConnection();
+using var channel = connectionFactory.CreateModel();
 channel.QueueDeclare(
     queue:"letterboxtest", 
     durable:false, 
@@ -26,4 +25,4 @@ for(int i = 0; i< 1000; i++){
 var messageSerialised = JsonConvert.SerializeObject(message);
 var encodedMessage = Encoding.UTF8.GetBytes(messageSerialised); 
 channel.BasicPublish("","letterbox", null ,encodedMessage);
-Console.WriteLine($"Published Serialised Message: {messageSerialised}");
+Console.WriteLine($"Published Serialised JSON Message: {messageSerialised}");
