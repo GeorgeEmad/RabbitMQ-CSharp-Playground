@@ -5,9 +5,9 @@ using System.Collections;
 using RabbitMQ.Client;
 
 var factory = new ConnectionFactory{
-                                        Uri = new Uri("amqp://guest:guest@localhost:5672"), 
-                                        ClientProvidedName= "Producer App" 
-                                    };
+    Uri = new Uri("amqp://guest:guest@localhost:5672"), 
+    ClientProvidedName= "Producer App" 
+};
 
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
@@ -18,11 +18,9 @@ channel.QueueDeclare(
     autoDelete:false, 
     arguments: null
 );
-
-var messgae = "Test RabbitMQ";
-
-var encodedMessage = Encoding.UTF8.GetBytes(messgae); 
-
-channel.BasicPublish("","letterbox", null ,encodedMessage);
-
-Console.WriteLine($"Published: {messgae}");
+for(int i = 0; i< 1000; i++){
+    var messgae = $"Test RabbitMQ {i}";
+    var encodedMessage = Encoding.UTF8.GetBytes(messgae); 
+    channel.BasicPublish("","letterbox", null ,encodedMessage);
+    Console.WriteLine($"Published: {messgae}");
+}
