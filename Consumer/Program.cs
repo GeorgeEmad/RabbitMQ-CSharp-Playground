@@ -24,8 +24,8 @@ channel.QueueDeclare(
 channel.BasicQos(0, 1,  false);
 
 var random = new Random();
-var eventBasicConsumer = new EventingBasicConsumer(channel);
-eventBasicConsumer.Received += (model, eventArguments) =>{
+var coonsumer = new EventingBasicConsumer(channel);
+coonsumer.Received += (model, eventArguments) =>{
     var processingTime = random.Next(1,5);
     var body = eventArguments.Body.ToArray();
     var message = Encoding.UTF8.GetString(body);
@@ -34,6 +34,6 @@ eventBasicConsumer.Received += (model, eventArguments) =>{
     Console.WriteLine($"message: {message} was processed in {processingTime}s");
 };
 
-channel.BasicConsume(queue:"letterbox", autoAck: false,  eventBasicConsumer);
+channel.BasicConsume(queue:"letterbox", autoAck: false,  coonsumer);
 Console.WriteLine($"Press Enter to Exit");
 Console.ReadLine();
