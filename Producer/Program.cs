@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections;
 using RabbitMQ.Client;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 var factory = new ConnectionFactory{
     Uri = new Uri("amqp://guest:guest@localhost:5672"), 
@@ -19,7 +20,7 @@ channel.QueueDeclare(
     arguments: null
 );
 var message = new List<string>();
-for(int i = 0; i< 1000; i++){
+for(int i = 0; i< 5; i++){
     message.Add($"{i}");
 }
 var messageSerialised = JsonConvert.SerializeObject(message);
