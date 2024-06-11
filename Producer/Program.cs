@@ -19,11 +19,20 @@ channel.QueueDeclare(
     autoDelete:false, 
     arguments: null
 );
-var message = new List<string>();
-for(int i = 0; i< 5; i++){
-    message.Add($"{i}");
+
+var random = new Random();
+var whileIndex = 0;
+while(true)
+{
+    var producingTime = random.Next(1,3);
+    var message = new List<string>();
+    for(int i = 0; i< 2; i++){
+        message.Add($"param {i}");
+    }
+    var messageSerialised = JsonConvert.SerializeObject(message);
+    var encodedMessage = Encoding.UTF8.GetBytes(messageSerialised); 
+    Task.Delay(TimeSpan.FromSeconds(producingTime)).Wait();
+    channel.BasicPublish("","letterbox", null ,encodedMessage);
+    Console.WriteLine($"Number: {whileIndex} Published Serialised JSON Message: {messageSerialised}");
+    whileIndex++;
 }
-var messageSerialised = JsonConvert.SerializeObject(message);
-var encodedMessage = Encoding.UTF8.GetBytes(messageSerialised); 
-channel.BasicPublish("","letterbox", null ,encodedMessage);
-Console.WriteLine($"Published Serialised JSON Message: {messageSerialised}");

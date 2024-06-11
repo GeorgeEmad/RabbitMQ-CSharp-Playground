@@ -21,9 +21,9 @@ channel.QueueDeclare(
     arguments: null
 );
 
-channel.BasicQos(PrefetchSize:0, PrefetchCount:1, global: false);
+channel.BasicQos(0, 1,  false);
 
-var random = new Reandom();
+var random = new Random();
 var eventBasicConsumer = new EventingBasicConsumer(channel);
 eventBasicConsumer.Received += (model, eventArguments) =>{
     var processingTime = random.Next(1,5);
@@ -31,8 +31,7 @@ eventBasicConsumer.Received += (model, eventArguments) =>{
     var message = Encoding.UTF8.GetString(body);
     Task.Delay(TimeSpan.FromSeconds(processingTime)).Wait();
     channel.BasicAck(eventArguments.DeliveryTag, multiple: false);
-    Console.WriteLine($"message: {message}");
-    var messageDeserialised = JsonConvert.DeserializeObject<List<string>>(message);
+    Console.WriteLine($"message: {message} was processed in {processingTime}s");
 };
 
 channel.BasicConsume(queue:"letterbox", autoAck: false,  eventBasicConsumer);
