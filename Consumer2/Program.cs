@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections;
+﻿using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Newtonsoft.Json;
