@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿
 using RabbitMQ.Client;
-using System.Collections;
 using System.Text;
 
 var connectionFactory = new ConnectionFactory{

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections;
+﻿using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 var connectionFactory = new ConnectionFactory{
@@ -13,16 +10,10 @@ var connectionFactory = new ConnectionFactory{
 
 var connecion = connectionFactory.CreateConnection();
 var channel = connecion.CreateModel();
-channel.QueueDeclare(
-    queue: "letterbox2",
-    durable: false,
-    exclusive: false,
-    autoDelete:false,
-    arguments: null
-);
+var queueName =channel.QueueDeclare().QueueName;
 channel.BasicQos(0, 1,  false);
 channel.ExchangeDeclare(exchange: "FanOutExchange", type: ExchangeType.Fanout);
-channel.QueueBind("letterbox2", "FanOutExchange", "");
+channel.QueueBind(queueName, "FanOutExchange", "");
 
 var random = new Random();
 var coonsumer = new EventingBasicConsumer(channel);
@@ -32,9 +23,9 @@ coonsumer.Received += (model, eventArguments) =>{
     var message = Encoding.UTF8.GetString(body);
     Task.Delay(TimeSpan.FromSeconds(processingTime)).Wait();
     channel.BasicAck(eventArguments.DeliveryTag, multiple: false);
-    Console.WriteLine($"Consumer1: message: {message} was processed in {processingTime}s");
+    Console.WriteLine($"Consumer2: message: {message} was processed in {processingTime}s");
 };
 
-channel.BasicConsume(queue:"letterbox2", autoAck: false,  coonsumer);
+channel.BasicConsume(queue:queueName, autoAck: false,  coonsumer);
 Console.WriteLine($"Press Enter to Exit");
 Console.ReadLine();

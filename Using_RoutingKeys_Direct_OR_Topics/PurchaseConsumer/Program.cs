@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 var connectionFactory = new ConnectionFactory{
